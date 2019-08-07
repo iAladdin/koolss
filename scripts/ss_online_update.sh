@@ -23,24 +23,15 @@ decode_url_link(){
 
 decode_ss_url_link(){
 	link=$1
-	num=$2
-	len=$((${#link}-$num))
-	mod4=$(($len%4))
-	if [ "$mod4" -gt "0" ]; then
-		var="===="
-		newlink=${link}${var:$mod4}
-		echo -n "$newlink" | sed 's/-/+/g; s/_/\//g' | base64 -d
-	else
-		group=$(echo "$link" | sed 's/-/+/g; s/_/\//g;s/@/:/g;s/?//g' | awk -F'/' '{print $2}' | awk -F'group=' '{print $2}'|base64 -d)
-		link=$(echo "$link" | sed 's/-/+/g; s/_/\//g;s/@/:/g;s/?//g' | awk -F'/' '{print $1}')
-		encryptPart=$(echo -n "$link" | awk -F':' '{print $1}' | base64 -d)
-		encrypt_method=$(echo -n "$encryptPart" | awk -F':' '{print $1}')
-		password=$(echo -n "$encryptPart" | awk -F':' '{print $2}')
-		server=$(echo -n "$link" | awk -F':' '{print $2}')
-		server_port=$(echo -n "$link" | awk -F':' '{print $3}')
+	group=$(echo "$link" | sed 's/-/+/g; s/_/\//g;s/@/:/g;s/?//g' | awk -F'/' '{print $2}' | awk -F'group=' '{print $2}'|base64 -d)
+	link=$(echo "$link" | sed 's/-/+/g; s/_/\//g;s/@/:/g;s/?//g' | awk -F'/' '{print $1}')
+	encryptPart=$(echo -n "$link" | awk -F':' '{print $1}' | base64 -d)
+	encrypt_method=$(echo -n "$encryptPart" | awk -F':' '{print $1}')
+	password=$(echo -n "$encryptPart" | awk -F':' '{print $2}')
+	server=$(echo -n "$link" | awk -F':' '{print $2}')
+	server_port=$(echo -n "$link" | awk -F':' '{print $3}')
 
-		echo -n "$link" | sed 's/-/+/g; s/_/\//g' | base64 -d
-	fi
+	echo -n "$link" | sed 's/-/+/g; s/_/\//g' | base64 -d
 }
 
 add_ssr_servers(){
